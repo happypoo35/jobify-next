@@ -1,0 +1,19 @@
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: min(25rem, 100%);
+  border-radius: 0.25rem;
+  border-top: 0.25rem solid color(primary, 500);
+
+  > a {
+    align-self: center;
+    margin-bottom: 1rem;
+  }
+}

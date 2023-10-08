@@ -1,0 +1,58 @@
+.sidebar {
+  position: fixed;
+  z-index: 1;
+  right: 0;
+  transition: background-color 0.2s;
+  padding-top: $headerHeight;
+  display: none;
+
+  @include tablet {
+    display: initial;
+  }
+
+  &[data-active] {
+    background: rgba(color(gray, 900), 0.5);
+    width: 100%;
+    height: 100%;
+
+    .content {
+      display: flex;
+      animation: 0.2s slideIn forwards;
+    }
+
+    &[data-animate] {
+      background: none;
+
+      .content {
+        animation: 0.2s slideOut forwards;
+      }
+    }
+  }
+
+  nav {
+    padding-top: calc($headerHeight + 2rem);
+  }
+
+  .content {
+    position: absolute;
+    top: 0;
+    right: -16rem;
+    height: 100dvh;
+    background: white;
+    width: 16rem;
+  }
+}
+
+@keyframes slideIn {
+  to {
+    right: 0;
+  }
+}
+@keyframes slideOut {
+  from {
+    right: 0;
+  }
+  to {
+    right: -16rem;
+  }
+}

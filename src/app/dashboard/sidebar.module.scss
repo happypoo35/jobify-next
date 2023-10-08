@@ -1,0 +1,30 @@
+.sidebar {
+  z-index: 1;
+
+  @include tablet {
+    display: none;
+  }
+
+  &[data-active] {
+    .content {
+      margin-left: unset;
+    }
+  }
+
+  .content {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    width: 16rem;
+    background: white;
+    margin-left: -16rem;
+    transition: margin 0.2s ease;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    min-height: $headerHeight;
+    padding-left: 2rem;
+  }
+}

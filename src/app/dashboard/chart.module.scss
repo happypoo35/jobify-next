@@ -1,0 +1,17 @@
+.wrapper {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+.container {
+  position: absolute;
+  right: 0;
+  width: calc(100% + 3rem);
+
+  tspan {
+    font-size: 0.75rem;
+    fill: color(gray, 500);
+  }
+}
+

@@ -1,0 +1,44 @@
+.nav {
+  padding-block: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    flex: 1;
+  }
+
+  button {
+    width: 100%;
+    border: none;
+  }
+
+  a,
+  button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 3.5rem;
+    padding-left: 2rem;
+    color: color(gray, 500);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    background: transparent;
+    transition: 150ms ease;
+
+    @include hover {
+      color: color(gray, 600);
+      background: color(gray, 50);
+      padding-left: 2.25rem;
+    }
+
+    &[data-active] {
+      color: color(primary, 500);
+    }
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+}

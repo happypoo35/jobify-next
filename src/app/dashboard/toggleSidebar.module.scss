@@ -1,0 +1,20 @@
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  color: color(primary, 500);
+  transition: 150ms ease;
+  width: fit-content;
+
+  @include tablet {
+    justify-self: flex-end;
+  }
+
+  @include hover {
+    color: color(primary, 700);
+  }
+
+  svg {
+    pointer-events: none;
+  }
+}

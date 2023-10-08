@@ -1,0 +1,105 @@
+.container {
+  display: flex;
+}
+
+.checkbox {
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  color: color(gray, 400);
+  width: fit-content;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 0.75rem;
+
+  @include hover {
+    input ~ .checkmark {
+      border-color: color(primary, 400);
+
+      &::after {
+        background: color(primary, 500);
+      }
+    }
+  }
+
+  &[data-variant="switch"] {
+    input {
+      &:checked ~ .checkmark::after {
+        background: white;
+        left: 50%;
+        display: block;
+        scale: 1;
+      }
+    }
+
+    .checkmark {
+      min-width: 2.5rem;
+      height: 1.5rem;
+      border-radius: 1rem;
+      border: 1.5px solid color(gray, 300);
+      transition: 0.2s;
+
+      &::after {
+        left: 7%;
+        top: 50%;
+        translate: 0 -50%;
+        height: 70%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: color(gray, 300);
+        scale: 0.7;
+        transition: 0.2s;
+      }
+    }
+  }
+
+  &[data-variant="box"] {
+    input {
+      &:checked ~ .checkmark::after {
+        display: block;
+      }
+    }
+
+    .checkmark {
+      min-width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 0.25rem;
+      border: 1px solid color(gray, 450);
+
+      &::after {
+        display: none;
+        left: 50%;
+        top: 45%;
+        translate: -50% -50%;
+        width: 5px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 0.125rem 0.125rem 0;
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+
+    &:checked ~ .checkmark {
+      border-color: transparent;
+      background: color(primary, 500);
+    }
+  }
+
+  .checkmark {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+    }
+  }
+}
