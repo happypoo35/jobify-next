@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FiEyeOff, FiEye } from "react-icons/fi";
@@ -21,6 +21,7 @@ interface Props {
 }
 
 const Filters = ({ jobsCount = 0, page, limit }: Props) => {
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -51,7 +52,9 @@ const Filters = ({ jobsCount = 0, page, limit }: Props) => {
       params.delete(key);
     }
 
-    router.push(createUrl(pathname, params));
+    startTransition(() => {
+      router.replace(createUrl(pathname, params));
+    });
   };
 
   useEffect(() => {
@@ -65,7 +68,9 @@ const Filters = ({ jobsCount = 0, page, limit }: Props) => {
       params.delete("search");
     }
 
-    router.push(createUrl(pathname, params));
+    startTransition(() => {
+      router.replace(createUrl(pathname, params));
+    });
   }, [debouncedSearch, search, pathname, router, page, searchParams]);
 
   useEffect(() => {

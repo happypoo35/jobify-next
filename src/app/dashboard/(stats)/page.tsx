@@ -1,15 +1,21 @@
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/session";
 import Stats, { StatsSkeleton } from "./Stats";
 import ChartContainer from "./ChartContainer";
-import Chart from "./Chart";
 
 import styles from "./page.module.scss";
+import { Suspense } from "react";
+import Chart from "./Chart";
 
-const StatsPage = () => {
+const StatsPage = async () => {
+  const session = await getSession();
+
+  if (!session) redirect("/");
+
   return (
     <section className={styles.container}>
       <Suspense fallback={<StatsSkeleton />}>
-        <Stats />
+        <Stats session={session} />
       </Suspense>
       <section className={styles.chart}>
         <header>
@@ -17,7 +23,7 @@ const StatsPage = () => {
           <p>Job applications in last 12 months</p>
         </header>
         <Suspense fallback={<Chart data={[]} />}>
-          <ChartContainer />
+          <ChartContainer session={session} />
         </Suspense>
       </section>
     </section>

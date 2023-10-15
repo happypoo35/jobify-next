@@ -19,6 +19,7 @@ export type SearchParams = {
 const LIMIT = 12;
 
 const Jobs = async ({ searchParams }: { searchParams: SearchParams }) => {
+  // await new Promise((res) => setTimeout(res, 600000));
   const session = await getSession();
   const where = {
     userId: session?.id,
@@ -69,7 +70,7 @@ const Jobs = async ({ searchParams }: { searchParams: SearchParams }) => {
         page={Number(searchParams.page || 1)}
         limit={LIMIT}
       />
-      <section className={styles.list} role="list">
+      <section className={styles.list} role="list" id="jobList">
         {jobs.map((el) => (
           <JobCard key={el.id} job={el} />
         ))}

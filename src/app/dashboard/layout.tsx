@@ -7,6 +7,7 @@ import SidebarMobile from "./SidebarMobile";
 import ToggleSidebar from "./ToggleSidebar";
 
 import styles from "./layout.module.scss";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Dashboard",
@@ -29,7 +30,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </form>
             </div>
           </header>
+          {/* <Suspense fallback={<pre>Loading from layout...</pre>}> */}
           <main data-container>{children}</main>
+          {/* </Suspense> */}
         </div>
       </SidebarContextProvider>
     </div>

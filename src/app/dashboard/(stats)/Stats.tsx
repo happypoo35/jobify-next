@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FaSuitcaseRolling, FaCalendarCheck, FaBug } from "react-icons/fa";
-import { getSession } from "@/lib/session";
+import { Session } from "@/lib/session";
 import prisma from "@/prisma/db";
 import Spinner from "@/assets/spinner.svg";
 
@@ -30,14 +30,14 @@ const data = [
   },
 ] as const;
 
-const Stats = async () => {
-  const session = await getSession();
+const Stats = async ({ session }: { session: Session }) => {
+  // await new Promise((res) => setTimeout(res, 3000));
   const stats = await prisma.job.groupBy({
     by: ["status"],
     _count: {
       status: true,
     },
-    where: { userId: session?.id },
+    where: { userId: session.id },
   });
 
   const statsData = stats.reduce((acc: Record<string, number>, v) => {
