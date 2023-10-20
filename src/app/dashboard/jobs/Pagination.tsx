@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useTransition } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMediaQuery } from "@/hooks";
@@ -8,6 +8,7 @@ import { createUrl } from "@/utils/createUrl";
 import { usePagination } from "@/hooks";
 
 import styles from "./pagination.module.scss";
+import JobsLoader from "./JobsLoader";
 
 const Pagination = ({
   pageCount,
@@ -16,6 +17,7 @@ const Pagination = ({
   pageCount: number;
   currentPage: number;
 }) => {
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -37,7 +39,9 @@ const Pagination = ({
         params.set("page", String(page));
       }
 
-      router.push(createUrl(pathname, params));
+      startTransition(() => {
+        router.push(createUrl(pathname, params));
+      });
     },
     [pathname, router, searchParams]
   );
@@ -64,6 +68,7 @@ const Pagination = ({
 
   return (
     <div className={styles.container}>
+      {isPending && <JobsLoader />}
       <button
         className={styles.arrow}
         onClick={handlePrevPage}

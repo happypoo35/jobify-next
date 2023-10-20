@@ -103,7 +103,7 @@ const UpdateForm = ({ data }: { data: Job }) => {
             name="status"
             options={Object.values(StatusType)}
             error={errors.status?.message}
-            selected={getValues("status")}
+            defaultValue={getValues("status")}
             setValue={setValue}
             register={register}
           />
@@ -112,7 +112,7 @@ const UpdateForm = ({ data }: { data: Job }) => {
             label="type"
             options={Object.values(JobType)}
             error={errors.jobType?.message}
-            selected={getValues("jobType")}
+            defaultValue={getValues("jobType")}
             setValue={setValue}
             register={register}
           />

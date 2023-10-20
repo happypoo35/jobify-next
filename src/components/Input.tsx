@@ -14,7 +14,6 @@ interface InputProps<T extends FieldValues> {
   children?: React.ReactNode;
   valueAsNumber?: boolean;
   variant?: boolean;
-  onChange?: () => void;
   register?: UseFormRegister<T>;
 }
 
@@ -27,13 +26,13 @@ const Input = <T extends FieldValues>({
   variant,
   className,
   type = "text",
-  onChange,
   register,
   ...props
 }: InputProps<T> & JSX.IntrinsicElements["input"]) => {
   const [showPassword, setShowPassword] = useState(false);
   const inputId = useId();
   const isPassword = type === "password";
+  const { onChange, ...attributes } = props;
 
   return (
     <div
@@ -41,18 +40,27 @@ const Input = <T extends FieldValues>({
       data-error={!!error || undefined}
       data-variant={variant || undefined}
     >
-      <input
-        {...(register &&
-          register(name, {
+      {register ? (
+        <input
+          {...register(name, {
             valueAsNumber,
             onChange,
-          }))}
-        id={inputId}
-        type={isPassword ? (showPassword ? "text" : type) : type}
-        placeholder=" "
-        data-error={!!error || undefined}
-        {...props}
-      />
+          })}
+          id={inputId}
+          type={isPassword ? (showPassword ? "text" : type) : type}
+          placeholder=" "
+          data-error={!!error || undefined}
+          {...attributes}
+        />
+      ) : (
+        <input
+          id={inputId}
+          type={isPassword ? (showPassword ? "text" : type) : type}
+          placeholder=" "
+          data-error={!!error || undefined}
+          {...props}
+        />
+      )}
       {label && (
         <label className={styles.label} htmlFor={inputId}>
           {label}

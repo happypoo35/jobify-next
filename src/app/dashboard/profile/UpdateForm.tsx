@@ -27,15 +27,15 @@ const schema = yup.object().shape({
   location: yup.string().max(20, "Can't be greater than 20 characters"),
 });
 
-const UpdateForm = ({ user }: { user: Session }) => {
+const UpdateForm = ({ session }: { session: Session }) => {
   const [isPending, startTransition] = useTransition();
   const { alert, setAlert } = useAlert();
 
   const defaultValues = {
-    firstName: user.firstName,
-    lastName: user.lastName || "",
-    email: user.email,
-    location: user.location || "",
+    firstName: session.firstName,
+    lastName: session.lastName || "",
+    email: session.email,
+    location: session.location || "",
   };
 
   const {
@@ -58,7 +58,7 @@ const UpdateForm = ({ user }: { user: Session }) => {
 
     startTransition(async () => {
       try {
-        const res = await updateUser({ formData, userId: user.id });
+        const res = await updateUser({ formData, userId: session.id });
         if (!res.success) {
           setAlert({ isSuccess: false, message: "Failed" });
           if (typeof res.error === "string") {

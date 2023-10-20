@@ -45,6 +45,8 @@ const usePagination = ({ pageCount, siblingCount = 1, currentPage }: Props) => {
       const middleRange = range(leftSiblingIndex, rightSiblingIndex);
       return [firstPageIndex, "dots", ...middleRange, "dots", lastPageIndex];
     }
+
+    return null;
   }, [pageCount, siblingCount, currentPage]);
 
   return paginationRange;

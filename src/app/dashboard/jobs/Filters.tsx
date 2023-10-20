@@ -1,47 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useTransition } from "react";
+import { useMemo, useRef, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { FiEyeOff, FiEye } from "react-icons/fi";
+import debounce from "lodash.debounce";
 import { JobType, StatusType } from "@prisma/client";
-import { useDebounce } from "@/hooks";
 import { createUrl } from "@/utils/createUrl";
 import { SORT_OPTS } from "@/utils/constants";
-import { ButtonLink } from "@/components/Button";
+import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
+import JobsLoader from "./JobsLoader";
 
 import styles from "./filters.module.scss";
 
-interface Props {
-  jobsCount: number;
-  page: number;
-  limit: number;
-}
-
-const Filters = ({ jobsCount = 0, page, limit }: Props) => {
+const Filters = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  const defaultValues = useMemo(
-    () => ({
-      search: searchParams.get("search") || "",
-      status: searchParams.get("status") || "all",
-      jobType: searchParams.get("jobType") || "all",
-      sort: searchParams.get("sort") || "latest",
-    }),
-    [searchParams]
-  );
-
-  const { register, setValue, getValues, watch, reset } = useForm({
-    defaultValues,
-  });
-
-  const search = watch("search");
-  const debouncedSearch = useDebounce(search);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const setURLParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -57,87 +34,75 @@ const Filters = ({ jobsCount = 0, page, limit }: Props) => {
     });
   };
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
+  const debouncedSearchHandler = useMemo(
+    () =>
+      debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+        const params = new URLSearchParams(searchParams);
 
-    if (search === params.get(search)) return;
+        if (e.target.value) {
+          params.set("search", e.target.value);
+        } else {
+          params.delete("search");
+        }
 
-    if (debouncedSearch && search) {
-      params.set("search", debouncedSearch);
-    } else {
-      params.delete("search");
-    }
-
-    startTransition(() => {
-      router.replace(createUrl(pathname, params));
-    });
-  }, [debouncedSearch, search, pathname, router, page, searchParams]);
-
-  useEffect(() => {
-    reset(defaultValues);
-  }, [reset, defaultValues]);
-
-  const resultsText = (
-    <span>
-      Displaying{" "}
-      <b>
-        {(page - 1) * limit + 1}-
-        {page * limit < jobsCount ? page * limit : jobsCount}
-      </b>{" "}
-      of {jobsCount} job{jobsCount !== 1 ? "s" : ""} found
-    </span>
+        startTransition(() => {
+          router.replace(createUrl(pathname, params));
+        });
+      }, 500),
+    [pathname, router, searchParams]
   );
 
   return (
-    <div className={styles.container}>
-      <form>
-        <Input
-          name="search"
-          register={register}
-          label="search"
-          autoComplete="off"
-          defaultValue={searchParams.get("search") || ""}
-          variant
-        />
-        <Select
-          name="status"
-          options={["all", ...Object.values(StatusType)]}
-          selected={getValues("status")}
-          setValue={setValue}
-          register={register}
-          setURLParam={setURLParam}
-          variant
-        />
-        <Select
-          name="jobType"
-          label="type"
-          options={["all", ...Object.values(JobType)]}
-          selected={getValues("jobType")}
-          setValue={setValue}
-          register={register}
-          setURLParam={setURLParam}
-          variant
-        />
-        <Select
-          name="sort"
-          options={SORT_OPTS}
-          selected={getValues("sort")}
-          setValue={setValue}
-          register={register}
-          setURLParam={setURLParam}
-          variant
-        />
-      </form>
-      <div className={styles.stats}>
-        <span>
-          {jobsCount > 0 ? <FiEye /> : <FiEyeOff />}
-          {jobsCount > 0 ? resultsText : "no jobs to display"}
-        </span>
-        <ButtonLink href="./jobs" variant="inline">
+    <>
+      {isPending && <JobsLoader />}
+      <form ref={formRef} className={styles.container}>
+        <fieldset>
+          <Input
+            autoComplete="off"
+            label="search"
+            name="search"
+            defaultValue={searchParams.get("search") || ""}
+            onChange={debouncedSearchHandler}
+            variant
+          />
+          <Select
+            name="status"
+            options={["all", ...Object.values(StatusType)]}
+            defaultValue={searchParams.get("status") || "all"}
+            setURLParam={setURLParam}
+            variant
+          />
+          <Select
+            name="jobType"
+            label="type"
+            options={["all", ...Object.values(JobType)]}
+            defaultValue={searchParams.get("jobType") || "all"}
+            setURLParam={setURLParam}
+            variant
+          />
+          <Select
+            name="sort"
+            options={SORT_OPTS}
+            defaultValue={searchParams.get("sort") || "latest"}
+            setURLParam={setURLParam}
+            variant
+          />
+        </fieldset>
+        <Button
+          type="reset"
+          // href="./jobs"
+          variant="inline"
+          // onClick={() => formRef.current?.reset()}
+          onClick={() => {
+            startTransition(() => {
+              router.replace("./jobs");
+            });
+          }}
+        >
           Clear filters
-        </ButtonLink>
-      </div>
-    </div>
+        </Button>
+      </form>
+    </>
   );
 };
 

@@ -1,0 +1,15 @@
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: rgba(color(gray, 50), 0.5);
+  width: 100%;
+  position: absolute;
+}
+
+.spinner {
+  position: fixed;
+  top: 50dvh;
+  font-size: 3rem;
+}

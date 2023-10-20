@@ -2,11 +2,11 @@ import { getSession } from "@/lib/session";
 import UpdateForm from "./UpdateForm";
 
 const Profile = async () => {
-  const user = await getSession();
+  const session = await getSession();
 
-  if (!user) return null;
+  if (!session) return null;
 
-  return <UpdateForm user={user} />;
+  return <UpdateForm session={session} />;
 };
 
 export default Profile;

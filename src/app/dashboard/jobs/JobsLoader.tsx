@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Spinner from "@/assets/spinner.svg";
 
-import styles from "./loader.module.scss";
+import styles from "./jobsLoader.module.scss";
 
-const Loader = ({ isPending }: { isPending: boolean }) => {
+const JobsLoader = () => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -15,7 +15,7 @@ const Loader = ({ isPending }: { isPending: boolean }) => {
 
     if (doc)
       return createPortal(
-        <div className={styles.loader} aria-hidden={!isPending || undefined}>
+        <div className={styles.loader}>
           <Spinner className={styles.spinner} />
         </div>,
         doc
@@ -25,4 +25,4 @@ const Loader = ({ isPending }: { isPending: boolean }) => {
   return null;
 };
 
-export default Loader;
+export default JobsLoader;

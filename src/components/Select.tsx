@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import {
   FieldValues,
   UseFormSetValue,
@@ -21,10 +21,9 @@ type SelectProps<T extends FieldValues, N extends FieldPath<T>> = {
   options: FieldPathValue<T, N>[];
   label?: string;
   error?: string;
-  selected?: string;
   variant?: boolean;
-  setValue: UseFormSetValue<T>;
-  register: UseFormRegister<T>;
+  setValue?: UseFormSetValue<T>;
+  register?: UseFormRegister<T>;
   setURLParam?: (key: string, value: string) => void;
 };
 
@@ -33,7 +32,6 @@ const Select = <T extends FieldValues, N extends FieldPath<T>>({
   options,
   label,
   error,
-  selected,
   variant,
   setValue,
   register,
@@ -42,12 +40,18 @@ const Select = <T extends FieldValues, N extends FieldPath<T>>({
 }: SelectProps<T, N> & JSX.IntrinsicElements["input"]) => {
   const [show, setShow] = useState(false);
   const selectRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputId = useId();
 
   useOutsideClick(selectRef, () => setShow(false));
 
   const setSelected = (el: PathValue<T, N>) => {
-    setValue(name, el, { shouldDirty: true });
+    setValue?.(name, el, { shouldDirty: true });
     setURLParam?.(name, el);
+
+    if (!register && inputRef.current) {
+      inputRef.current.value = el;
+    }
   };
 
   return (
@@ -59,14 +63,12 @@ const Select = <T extends FieldValues, N extends FieldPath<T>>({
       onClick={() => setShow((p) => !p)}
       ref={selectRef}
     >
-      <input
-        {...register(name)}
-        id={`${name}-input`}
-        placeholder=" "
-        defaultValue={selected}
-        {...props}
-      />
-      <label htmlFor={`${name}-input`}>{label || name}</label>
+      {register ? (
+        <input {...register(name)} id={inputId} placeholder=" " {...props} />
+      ) : (
+        <input id={inputId} ref={inputRef} placeholder=" " {...props} />
+      )}
+      <label htmlFor={inputId}>{label || name}</label>
       <FiChevronDown className={styles.arrow} />
       {error && error !== ` ` && <em>{error}</em>}
       <ul className={styles.dropdown} role="listbox">
@@ -74,7 +76,7 @@ const Select = <T extends FieldValues, N extends FieldPath<T>>({
           <li
             key={id}
             className={styles.item}
-            data-active={el === selected || undefined}
+            data-active={el === props.defaultValue || undefined}
             onClick={() => setSelected(el)}
           >
             {el}

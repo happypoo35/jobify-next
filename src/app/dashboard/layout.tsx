@@ -1,13 +1,13 @@
+import { Suspense } from "react";
 import { logout } from "./actions";
-import Logo from "@/components/Logo";
-import Button from "@/components/Button";
 import { SidebarContextProvider } from "./SidebarContext";
+import Logo from "@/components/Logo";
 import Sidebar from "./Sidebar";
 import SidebarMobile from "./SidebarMobile";
 import ToggleSidebar from "./ToggleSidebar";
+import LogoutButton from "./LogoutButton";
 
 import styles from "./layout.module.scss";
-import { Suspense } from "react";
 
 export const metadata = {
   title: "Dashboard",
@@ -26,13 +26,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <ToggleSidebar />
               <h1 data-h3>Dashboard</h1>
               <form action={logout} className={styles.logout}>
-                <Button type="submit">Logout</Button>
+                <LogoutButton />
               </form>
             </div>
           </header>
-          {/* <Suspense fallback={<pre>Loading from layout...</pre>}> */}
-          <main data-container>{children}</main>
-          {/* </Suspense> */}
+          <main data-container>
+            <Suspense>{children}</Suspense>
+          </main>
         </div>
       </SidebarContextProvider>
     </div>
