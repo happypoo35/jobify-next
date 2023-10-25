@@ -14,17 +14,7 @@ export type SearchParams = Partial<{
 }>;
 
 const JobsPage = ({ searchParams }: { searchParams: SearchParams }) => {
-  return (
-    // <Suspense
-    //   fallback={
-    //     <div className={styles.loader}>
-    //       <Spinner className={styles.spinner} />
-    //     </div>
-    //   }
-    // >
-    <JobsList searchParams={searchParams} />
-    // </Suspense>
-  );
+  return <JobsList searchParams={searchParams} />;
 };
 
 export default JobsPage;

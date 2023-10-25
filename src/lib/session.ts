@@ -1,6 +1,8 @@
-import { sealData, unsealData } from "iron-session/edge";
+// import { unsealData as usealDataEdge } from "iron-session/edge";
+import { sealData, unsealData } from "iron-session";
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
+import { cache } from "react";
+// import { NextRequest } from "next/server";
 
 const COOKIE_NAME = "session";
 
@@ -24,9 +26,8 @@ export const createSession = async (data: Session) => {
   return null;
 };
 
-export const getSession = async () => {
-  const cookieStore = cookies();
-  const encryptedSession = cookieStore.get(COOKIE_NAME)?.value;
+export const getSession = cache(async () => {
+  const encryptedSession = cookies().get(COOKIE_NAME)?.value;
   const session = encryptedSession
     ? await unsealData<Session>(encryptedSession, {
         password: process.env.SESSION_SECRET!,
@@ -34,19 +35,19 @@ export const getSession = async () => {
     : null;
 
   return session;
-};
+});
 
-export const getSessionFromRequest = async (req: NextRequest) => {
-  const encryptedSession = req.cookies.get(COOKIE_NAME)?.value;
+// export const getSessionFromRequest = async (req: NextRequest) => {
+//   const encryptedSession = req.cookies.get(COOKIE_NAME)?.value;
 
-  const session = encryptedSession
-    ? await unsealData<Session>(encryptedSession, {
-        password: process.env.SESSION_SECRET!,
-      })
-    : null;
+//   const session = encryptedSession
+//     ? await usealDataEdge<Session>(encryptedSession, {
+//         password: process.env.SESSION_SECRET!,
+//       })
+//     : null;
 
-  return session;
-};
+//   return session;
+// };
 
 export const destroySession = () => {
   cookies().delete(COOKIE_NAME);

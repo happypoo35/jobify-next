@@ -5,7 +5,7 @@ import JobCardOptions from "./JobCardOptions";
 
 import styles from "./jobCard.module.scss";
 
-const JobCard = ({ job }: { job: Job }) => {
+const JobCard = ({ job }: { job: Omit<Job, "updatedAt" | "userId"> }) => {
   return (
     <article className={styles.card}>
       <header>

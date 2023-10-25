@@ -11,6 +11,16 @@ import styles from "./jobsList.module.scss";
 
 const LIMIT = 12;
 
+const select = {
+  id: true,
+  company: true,
+  position: true,
+  jobLocation: true,
+  jobType: true,
+  status: true,
+  createdAt: true,
+};
+
 const JobsList = async ({ searchParams }: { searchParams: SearchParams }) => {
   // await new Promise((res) => setTimeout(res, 3000));
   const page = Number(searchParams.page || 1);
@@ -33,6 +43,7 @@ const JobsList = async ({ searchParams }: { searchParams: SearchParams }) => {
       skip: (Number(searchParams.page || 1) - 1) * LIMIT,
       take: LIMIT,
       where,
+      select,
       orderBy: [
         {
           createdAt: searchParams.sort

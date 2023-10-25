@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import prisma from "@/prisma/db";
-import { createSession } from "@/lib/session";
+import { createSession, getSession } from "@/lib/session";
 
 export type FormData = {
   firstName: string;
@@ -12,13 +12,7 @@ export type FormData = {
   location?: string;
 };
 
-export const updateUser = async ({
-  formData,
-  userId,
-}: {
-  formData: FormData;
-  userId: string;
-}) => {
+export const updateUser = async (formData: FormData) => {
   const data = z
     .object({
       firstName: z.string(),
@@ -33,9 +27,14 @@ export const updateUser = async ({
     return { success: false, error: data.error.issues };
   }
 
+  const session = await getSession();
+  if (!session?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
   try {
     const user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: session.id },
       data: data.data,
     });
 

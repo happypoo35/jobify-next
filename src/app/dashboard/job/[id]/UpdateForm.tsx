@@ -30,7 +30,11 @@ const schema = yup.object().shape({
   jobType: yup.string().required("Can not be empty"),
 });
 
-const UpdateForm = ({ data }: { data: Job }) => {
+const UpdateForm = ({
+  data,
+}: {
+  data: Omit<Job, "createdAt" | "updatedAt" | "userId">;
+}) => {
   const [isPending, startTransition] = useTransition();
   const { alert, setAlert } = useAlert();
   const router = useRouter();
@@ -46,7 +50,6 @@ const UpdateForm = ({ data }: { data: Job }) => {
   const {
     register,
     handleSubmit,
-    getValues,
     setValue,
     reset,
     formState: { errors, isDirty, isValid },
@@ -83,27 +86,30 @@ const UpdateForm = ({ data }: { data: Job }) => {
         <section>
           <Input
             name="position"
-            register={register}
             label="position"
+            defaultValue={defaultValues.position}
             error={errors.position?.message}
+            register={register}
           />
           <Input
             name="company"
-            register={register}
             label="company"
+            defaultValue={defaultValues.company}
             error={errors.company?.message}
+            register={register}
           />
           <Input
             name="jobLocation"
             label="location"
-            register={register}
+            defaultValue={defaultValues.jobLocation}
             error={errors.jobLocation?.message}
+            register={register}
           />
           <Select
             name="status"
             options={Object.values(StatusType)}
             error={errors.status?.message}
-            defaultValue={getValues("status")}
+            defaultValue={defaultValues.status}
             setValue={setValue}
             register={register}
           />
@@ -112,7 +118,7 @@ const UpdateForm = ({ data }: { data: Job }) => {
             label="type"
             options={Object.values(JobType)}
             error={errors.jobType?.message}
-            defaultValue={getValues("jobType")}
+            defaultValue={defaultValues.jobType}
             setValue={setValue}
             register={register}
           />
@@ -141,4 +147,5 @@ const UpdateForm = ({ data }: { data: Job }) => {
     </FormContainer>
   );
 };
+
 export default UpdateForm;
