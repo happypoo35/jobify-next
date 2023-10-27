@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Stats, { StatsSkeleton } from "./Stats";
 import ChartContainer from "./ChartContainer";
 import Chart from "./Chart";
+// import FormStateTest from "./FormStateTest";
 
 import styles from "./page.module.scss";
 
@@ -20,6 +21,7 @@ const StatsPage = () => {
           <ChartContainer />
         </Suspense>
       </section>
+      {/* <FormStateTest /> */}
     </section>
   );
 };
