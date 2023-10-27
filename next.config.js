@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true,
-    scrollRestoration: true,
-  },
   sassOptions: {
     includePaths: ["./src"],
     prependData: '@import "@/styles/config";',

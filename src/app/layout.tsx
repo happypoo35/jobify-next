@@ -1,5 +1,5 @@
 import { Roboto, Roboto_Condensed } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { cn } from "@/utils/cn";
 
 import styles from "./layout.module.scss";
@@ -8,6 +8,13 @@ import "@/styles/globals.scss";
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
   : "http://localhost:3000";
+
+export const viewport: Viewport = {
+  themeColor: "hsl(210, 36%, 96%)",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -19,12 +26,6 @@ export const metadata: Metadata = {
   robots: {
     follow: true,
     index: true,
-  },
-  themeColor: "hsl(210, 36%, 96%)",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    viewportFit: "cover",
   },
   twitter: {
     card: "summary_large_image",
