@@ -1,6 +1,7 @@
-import { unsealData } from "iron-session/edge";
+// import { unsealData } from "iron-session/edge";
+import { unsealData } from "iron-session";
 import { NextRequest, NextResponse } from "next/server";
-import { Session } from "./lib/session";
+import { Session, getSessionFromRequest } from "./lib/session";
 
 export const middleware = async (req: NextRequest) => {
   const path = req.nextUrl.pathname;
@@ -8,9 +9,10 @@ export const middleware = async (req: NextRequest) => {
 
   const session = encryptedSession
     ? await unsealData<Session>(encryptedSession, {
-        password: process.env.SESSION_SECRET!,
+        password: process.env.SESSION_SECRET as string,
       })
     : null;
+  // const session = await getSessionFromRequest(req);
 
   const isException = ["/", "/login", "/register"].some((el) => path === el);
 

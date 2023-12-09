@@ -2,7 +2,7 @@
 import { sealData, unsealData } from "iron-session";
 import { cookies } from "next/headers";
 import { cache } from "react";
-// import { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 
 const COOKIE_NAME = "session";
 
@@ -37,17 +37,17 @@ export const getSession = cache(async () => {
   return session;
 });
 
-// export const getSessionFromRequest = async (req: NextRequest) => {
-//   const encryptedSession = req.cookies.get(COOKIE_NAME)?.value;
+export const getSessionFromRequest = async (req: NextRequest) => {
+  const encryptedSession = req.cookies.get(COOKIE_NAME)?.value;
 
-//   const session = encryptedSession
-//     ? await usealDataEdge<Session>(encryptedSession, {
-//         password: process.env.SESSION_SECRET!,
-//       })
-//     : null;
+  const session = encryptedSession
+    ? await unsealData<Session>(encryptedSession, {
+        password: process.env.SESSION_SECRET!,
+      })
+    : null;
 
-//   return session;
-// };
+  return session;
+};
 
 export const destroySession = () => {
   cookies().delete(COOKIE_NAME);
